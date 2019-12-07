@@ -11,16 +11,24 @@ public class Oppgave3 {
         File fil = new File(filnavn);
         Scanner leser = new Scanner(fil);
 
-        // Her skal du skrive noe kode i deloppg. a og b.
+        // Write code for a and b here.
+        String line;
+
         while (leser.hasNextLine()) {
-            if (leser.nextLine().contains("//")) {
-                System.out.println(leser.nextLine());
+        	// We create a variable because nextLine will jump to the next line,
+        	// even when used inside an if statement.
+            line = leser.nextLine();
+        	if (!line.contains("//")) {
+                System.out.println(line);
             }
         }
 
         leser.close();
     }
 
+    // lesCatch will always read the file independent of where it's used,
+    // as long as it returns true,
+    // so never use it directly inside e.g. an if statement.
     public static boolean lesCatch(String filnavn) {
         try {
             les(filnavn);
@@ -30,22 +38,21 @@ public class Oppgave3 {
         }
     }
 
-    public static void lesForsok(String filnavn, int forsok) {
-        int i = 0;
+    public static void lesForsok(int forsok) {
+    	// Read the comments for lesCatch() to understand why we do this:
+    	boolean lestInn= false;
 
-        while (i < forsok) {
-            if (!lesCatch(filnavn)) {
-                showMessageDialog(null, "Feil");
-                showInputDialog("Angi filnavn");
-                i++;
-            } else {
-                lesCatch(filnavn);
-            }
-        }
+        do {
+        	String filnavnFraBruker = showInputDialog("Angi filnavn");
+        	lestInn = lesCatch(filnavnFraBruker);
+        	if (!lestInn) {
+            	showMessageDialog(null, "Feil filnavn");
+            	forsok--;
+        	}
+        } while (!lestInn && forsok > 0);
     }
 
     public static void main(String[] args) {
-        // C:\Users\chris\eclipse-workspace\DAT100-eksamen-2017\src\test.txt
-        Oppgave3.lesForsok("\\test.txt", 3);
+        Oppgave3.lesForsok(3);
     }
 }
